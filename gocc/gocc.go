@@ -1,4 +1,4 @@
-//go:build noasm || !amd64
+//go:build noasm || (!amd64 && !arm64)
 
 package gocc
 

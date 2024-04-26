@@ -3,29 +3,12 @@ package main
 import (
 	"testing"
 
+	"github.com/klauspost/cpuid/v2"
+
 	"github.com/Crash129/go-simd-example/avo"
 	"github.com/Crash129/go-simd-example/gocc"
 	"github.com/Crash129/go-simd-example/gosimd"
-	"github.com/klauspost/cpuid/v2"
 )
-
-/*
-goos: linux
-goarch: amd64
-pkg: github.com/Crash129/go-simd-example
-cpu: AMD Ryzen 7 5700X 8-Core Processor
-BenchmarkAvo
-BenchmarkAvo-16        	 3100104	       383.8 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGocc
-BenchmarkGocc-16       	 3770598	       318.4 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPlainGo
-BenchmarkPlainGo-16    	  666050	      1797 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGoSIMD
-    go-simd-example/main_test.go:49: no ARM SIMD support
---- SKIP: BenchmarkGoSIMD
-PASS
-ok  	github.com/Crash129/go-simd-example	4.325s
-*/
 
 var xs, xy, out []float32
 
@@ -52,8 +35,8 @@ func BenchmarkAvo(b *testing.B) {
 }
 
 func BenchmarkGocc(b *testing.B) {
-	if !cpuid.CPU.Has(cpuid.AVX2) {
-		b.Skip("no AVX2 support")
+	if !cpuid.CPU.Has(cpuid.AVX2) && !cpuid.CPU.Has(cpuid.ASIMD) {
+		b.Skip("no AVX2 or ARM SIMD support")
 	}
 	b.ResetTimer()
 
