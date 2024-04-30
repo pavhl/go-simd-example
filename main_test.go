@@ -6,6 +6,7 @@ import (
 	"github.com/klauspost/cpuid/v2"
 
 	"github.com/Crash129/go-simd-example/avo"
+	"github.com/Crash129/go-simd-example/cgo"
 	"github.com/Crash129/go-simd-example/gocc"
 	"github.com/Crash129/go-simd-example/gosimd"
 )
@@ -59,5 +60,16 @@ func BenchmarkGoSIMD(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		gosimd.Add(xs, xy, out)
+	}
+}
+
+func BenchmarkCGo(b *testing.B) {
+	if !cpuid.CPU.Has(cpuid.AVX2) && !cpuid.CPU.Has(cpuid.ASIMD) {
+		b.Skip("no AVX2 or ARM SIMD support")
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		cgo.Add(xs, xy, out)
 	}
 }

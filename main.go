@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 
+	"github.com/klauspost/cpuid/v2"
+
 	"github.com/Crash129/go-simd-example/avo"
+	"github.com/Crash129/go-simd-example/cgo"
 	"github.com/Crash129/go-simd-example/gocc"
 	"github.com/Crash129/go-simd-example/gosimd"
-	"github.com/klauspost/cpuid/v2"
 )
 
 func main() {
@@ -29,10 +31,18 @@ func main() {
 
 	if cpuid.CPU.Has(cpuid.ASIMD) {
 		clear(out)
+		cgo.Add(a, b, out)
+		fmt.Printf("cgo:\t%+v\n", out)
+
+		clear(out)
 		gosimd.Add(a, b, out)
 		fmt.Printf("gosimd:\t%+v\n", out)
 	}
 	if cpuid.CPU.Has(cpuid.AVX2) {
+		clear(out)
+		cgo.Add(a, b, out)
+		fmt.Printf("cgo:\t%+v\n", out)
+
 		clear(out)
 		gocc.Add(a, b, out)
 		fmt.Printf("gocc:\t%+v\n", out)
